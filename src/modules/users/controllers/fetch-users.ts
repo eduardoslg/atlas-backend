@@ -43,14 +43,12 @@ export async function fetchUsersController(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { page, limit, search } = request.query
-      const { clientId } = request.user.sub
 
       const fetchUsersUseCase = makeFetchUsersUseCase()
       const output = await fetchUsersUseCase.execute({
         page,
         limit,
         search,
-        clientId,
       })
 
       return reply.status(201).send(output)

@@ -33,10 +33,9 @@ export const permissions: Record<Role, PermissionsByRole> = {
     })
   },
   MEMBER(user, { can, cannot }) {
-    can(['update', 'list'], 'User')
-    cannot(['update'], 'User')
-    can(['update'], 'User', {
+    can(['update', 'delete', 'get'], 'User', {
       userId: { $eq: user.userId },
     })
+    cannot(['create', 'update', 'list'], 'User')
   },
 }

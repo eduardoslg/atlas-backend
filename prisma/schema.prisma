@@ -29,13 +29,14 @@ model User {
 
   role Role @default(MEMBER)
 
-  clientId String @map("client_id") @db.Uuid
+  clientId String? @map("client_id") @db.Uuid
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  client Client @relation(fields: [clientId], references: [id])
+  client              Client?               @relation(fields: [clientId], references: [id])
+  meetingRoomSchedule MeetingRoomSchedule[]
 
   @@map("users")
 }
@@ -63,49 +64,35 @@ model MeetingRoom {
   alias      String   @db.VarChar(50)
   capacity   Int
   direction  String   @db.VarChar(100)
-  startedAt  DateTime
-  finishedAt DateTime
+  startedAt  DateTime @map("started_at")
+  finishedAt DateTime @map("finished_at")
   color      String?  @db.VarChar(7)
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  client Client @relation(fields: [clientId], references: [id])
+  client              Client                @relation(fields: [clientId], references: [id])
+  meetingRoomSchedule MeetingRoomSchedule[]
 
   @@map("meeting_rooms")
 }
 
-// id: {
-//   type: DataTypes.INTEGER(11),
-//   primaryKey: true,
-//   autoIncrement: true,
-//   allowNull: false,
-// },
-// alias: {
-//   type: DataTypes.STRING(50),
-//   allowNull: false,
-//   field: 'apelido',
-// },
-// capacity: {
-//   type: DataTypes.INTEGER(11),
-//   allowNull: false,
-//   field: 'capacidade',
-// },
-// direction: {
-//   type: DataTypes.STRING(100),
-//   allowNull: false,
-//   field: 'localizacao',
-// },
-// startAt: {
-//   type: DataTypes.INTEGER(11),
-//   allowNull: false,
-//   defaultValue: 700,
-//   field: 'inicio_agenda',
-// },
-// finishAt: {
-//   type: DataTypes.INTEGER(11),
-//   allowNull: false,
-//   defaultValue: 1900,
-//   field: 'fim_agenda',
-// },
+model MeetingRoomSchedule {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId        String   @db.Uuid
+  meetingRoomId String   @map("meeting_room_id")
+  startedAt     DateTime @map("started_at")
+  finishedAt    DateTime @map("finished_at")
+  reason        String   @db.VarChar(200)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  user        User        @relation(fields: [userId], references: [id])
+  meetingRoom MeetingRoom @relation(fields: [meetingRoomId], references: [id])
+
+  @@map("meeting_room_schedules")
+}

@@ -27,12 +27,10 @@ export async function deleteUserController(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { id } = request.params
-      const { clientId } = request.user.sub
 
       const deleteUserUseCase = makeDeleteUserUseCase()
       const output = await deleteUserUseCase.execute({
         id,
-        clientId,
       })
 
       return reply.status(201).send(output)

@@ -42,6 +42,7 @@ export async function authenticateController(app: FastifyInstance) {
             sub: {
               userId: user.id,
               role: user.role,
+              clientId: user.clientId,
             },
           },
           env.JWT_SECRET,

@@ -13,13 +13,13 @@ import {
 } from '../users'
 
 export class PrismaUsersRepository implements UsersRepository {
-  async create({ name, email, role, clientId }: CreateUserData): Promise<User> {
+  async create({ name, email, password }: CreateUserData): Promise<User> {
     const output = await prisma.user.create({
       data: {
         name,
         email,
-        role,
-        clientId,
+        password,
+        role: 'MEMBER',
       },
     })
 
@@ -76,7 +76,9 @@ export class PrismaUsersRepository implements UsersRepository {
 
   async me(
     userId: string,
-  ): Promise<(User & { client: { id: string; businessName: string } }) | null> {
+  ): Promise<
+    (User & { client: { id: string; businessName: string } | null }) | null
+  > {
     const output = await prisma.user.findFirst({
       where: {
         id: userId,
@@ -94,7 +96,7 @@ export class PrismaUsersRepository implements UsersRepository {
     return output
   }
 
-  async delete({ id, clientId }: DeleteUserData): Promise<boolean> {
+  async delete({ id }: DeleteUserData): Promise<boolean> {
     await prisma.user.update({
       data: {
         active: false,
@@ -102,18 +104,16 @@ export class PrismaUsersRepository implements UsersRepository {
       },
       where: {
         id,
-        clientId,
       },
     })
 
     return true
   }
 
-  async findById({ id, clientId }: FindByIdData): Promise<User | null> {
+  async findById({ id }: FindByIdData): Promise<User | null> {
     const output = await prisma.user.findUnique({
       where: {
         id,
-        clientId,
       },
     })
 

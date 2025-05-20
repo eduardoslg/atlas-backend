@@ -3,8 +3,6 @@ import { Role, User } from '@prisma/client'
 export type CreateUserData = {
   name: string
   email: string
-  role: Role
-  clientId: string
   password: string
 }
 
@@ -17,12 +15,10 @@ export type UpdateUserData = {
 
 export type DeleteUserData = {
   id: string
-  clientId: string
 }
 
 export type FindByIdData = {
   id: string
-  clientId: string
 }
 
 export type FetchUsersData = {
@@ -49,7 +45,9 @@ export interface UsersRepository {
   fetch(data: FetchUsersData): Promise<FetchUsersResult>
   me(
     userId: string,
-  ): Promise<(User & { client: { id: string; businessName: string } }) | null>
+  ): Promise<
+    (User & { client?: { id: string; businessName: string } | null }) | null
+  >
   delete(data: DeleteUserData): Promise<boolean>
   findById(data: FindByIdData): Promise<User | null>
   findByEmail(email: string): Promise<User | null>

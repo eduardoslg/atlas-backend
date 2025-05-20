@@ -1,6 +1,6 @@
 import { hash } from 'bcryptjs'
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Role } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -19,7 +19,7 @@ async function main() {
         name: 'Admin',
         email: 'admin@zysoft.com.br',
         password: passwordHash,
-        role: 'OWNER',
+        role: Role.OWNER,
         clientId: client.id,
       },
     })
